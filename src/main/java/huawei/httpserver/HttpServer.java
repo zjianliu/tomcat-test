@@ -1,26 +1,25 @@
-package huawei;
+package huawei.httpserver;
 
-import java.io.File;
+import huawei.processor.ServletProcessor;
+import huawei.processor.StaticResourceProcessor;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.UnknownHostException;
 
 public class HttpServer
 {
-    public static final String WEB_ROOT = System.getProperty("user.dir") + File.separator + "webroot";
-
     private static final String SHOUTDOWN_COMMAND = "/SHUTDOWN";
 
     private boolean shutdown = false;
 
     public static void main(String[] args)
     {
+        System.out.println("HTTP Server is running...");
         HttpServer server = new HttpServer();
-
         server.await();
     }
 
@@ -51,7 +50,15 @@ public class HttpServer
 
                 Response response = new Response(output);
                 response.setRequest(request);
-                response.sendStaticResource();
+
+                //check if this is a request for a servlet or a static resource
+                if (request.getUri().startsWith("/servlet/")) {
+                    ServletProcessor processor = new ServletProcessor();
+                    processor.process(request, response);
+                } else {
+                    StaticResourceProcessor processor = new StaticResourceProcessor();
+                    processor.process(request, response);
+                }
 
                 socket.close();
 
