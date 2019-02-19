@@ -1,5 +1,3 @@
-package huawei.servlet;
-
 import javax.servlet.*;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -21,6 +19,10 @@ public class PrimitiveServlet implements Servlet {
             throws ServletException, IOException {
         System.out.println("from service");
         PrintWriter out = servletResponse.getWriter();
+        String responseHead = "HTTP/1.1 200 OK\r\n"
+                + "Content-Type: text/html\r\n"
+                + "\r\n";
+        out.println(responseHead);
         out.println("Hello, I come from China.");
         out.println("Nice to meet you");
     }

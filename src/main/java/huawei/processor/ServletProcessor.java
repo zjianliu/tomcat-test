@@ -2,7 +2,9 @@ package huawei.processor;
 
 import huawei.common.Constants;
 import huawei.httpserver.Request;
+import huawei.httpserver.RequestFacade;
 import huawei.httpserver.Response;
+import huawei.httpserver.ResponseFacade;
 
 import javax.servlet.Servlet;
 import javax.servlet.ServletRequest;
@@ -41,7 +43,7 @@ public class ServletProcessor {
         Servlet servlet = null;
         try {
             servlet = (Servlet) myClass.newInstance();
-            servlet.service(request, response);
+            servlet.service(new RequestFacade(request), new ResponseFacade(response));
         } catch (Exception e) {
             e.printStackTrace();
         } catch (Throwable e) {
